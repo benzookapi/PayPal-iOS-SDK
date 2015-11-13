@@ -45,7 +45,7 @@ class MainViewController: UIViewController, PayPalPaymentDelegate, PayPalFutureP
     
     // Set up payPalConfig
     payPalConfig.acceptCreditCards = acceptCreditCards;
-    payPalConfig.merchantName = "Awesome Shirts, Inc."
+    payPalConfig.merchantName = "BO, Inc."
     payPalConfig.merchantPrivacyPolicyURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/privacy-full")
     payPalConfig.merchantUserAgreementURL = NSURL(string: "https://www.paypal.com/webapps/mpp/ua/useragreement-full")
     
@@ -90,21 +90,21 @@ class MainViewController: UIViewController, PayPalPaymentDelegate, PayPalFutureP
     //       and simply set payment.amount to your total charge.
     
     // Optional: include multiple items
-    let item1 = PayPalItem(name: "Old jeans with holes", withQuantity: 2, withPrice: NSDecimalNumber(string: "84.99"), withCurrency: "USD", withSku: "Hip-0037")
-    let item2 = PayPalItem(name: "Free rainbow patch", withQuantity: 1, withPrice: NSDecimalNumber(string: "0.00"), withCurrency: "USD", withSku: "Hip-00066")
-    let item3 = PayPalItem(name: "Long-sleeve plaid shirt (mustache not included)", withQuantity: 1, withPrice: NSDecimalNumber(string: "37.99"), withCurrency: "USD", withSku: "Hip-00291")
+    let item1 = PayPalItem(name: "チケット１", withQuantity: 2, withPrice: NSDecimalNumber(string: "50"), withCurrency: "JPY", withSku: "Hip-0037")
+    let item2 = PayPalItem(name: "商品１", withQuantity: 1, withPrice: NSDecimalNumber(string: "50"), withCurrency: "JPY", withSku: "Hip-00066")
+    let item3 = PayPalItem(name: "月額１", withQuantity: 1, withPrice: NSDecimalNumber(string: "50"), withCurrency: "JPY", withSku: "Hip-00291")
     
     let items = [item1, item2, item3]
     let subtotal = PayPalItem.totalPriceForItems(items)
     
     // Optional: include payment details
-    let shipping = NSDecimalNumber(string: "5.99")
-    let tax = NSDecimalNumber(string: "2.50")
+    let shipping = NSDecimalNumber(string: "5")
+    let tax = NSDecimalNumber(string: "5")
     let paymentDetails = PayPalPaymentDetails(subtotal: subtotal, withShipping: shipping, withTax: tax)
     
     let total = subtotal.decimalNumberByAdding(shipping).decimalNumberByAdding(tax)
     
-    let payment = PayPalPayment(amount: total, currencyCode: "USD", shortDescription: "Hipster Clothing", intent: .Sale)
+    let payment = PayPalPayment(amount: total, currencyCode: "JPY", shortDescription: "テスト購入", intent: .Sale)
     
     payment.items = items
     payment.paymentDetails = paymentDetails

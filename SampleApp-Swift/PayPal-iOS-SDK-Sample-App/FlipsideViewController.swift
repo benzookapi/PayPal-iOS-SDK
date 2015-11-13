@@ -56,7 +56,7 @@ class FlipsideViewController: UIViewController {
     acceptCreditCardsSwitch.on = flipsideDelegate!.acceptCreditCards
     
 #if !HAS_CARDIO
-    acceptCreditCardsSwitch.enabled = false
+    acceptCreditCardsSwitch.enabled = true
 #endif
     
     let resultText = flipsideDelegate!.resultText

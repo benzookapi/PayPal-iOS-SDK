@@ -13,9 +13,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-#warning "Enter your credentials"
-  [PayPalMobile initializeWithClientIdsForEnvironments:@{PayPalEnvironmentProduction : @"YOUR_CLIENT_ID_FOR_PRODUCTION",
-                                                         PayPalEnvironmentSandbox : @"YOUR_CLIENT_ID_FOR_SANDBOX"}];
+//#warning "Enter your credentials"
+  [PayPalMobile initializeWithClientIdsForEnvironments:@{PayPalEnvironmentProduction : @"AURnLmTIrSf7B8cCdOnj7epoFK2gM2zosJgTeILZQz4_HXy-F8e3Zb-Ysws9Rl5ysL82jUxzXD24iCFr",
+                                                         PayPalEnvironmentSandbox : @"AZE755WCwmQata01pA9JCtpBgjNsqvUg8UOQ3LEghuJVFFGGP3auKYYPYkWKXBOSu5_ZbKzyYII9wGYV"}];
   return YES;
 }
 
