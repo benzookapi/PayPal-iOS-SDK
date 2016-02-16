@@ -165,6 +165,106 @@ class MainViewController: UIViewController, PayPalPaymentDelegate, PayPalFutureP
       self.resultText = futurePaymentAuthorization!.description
       self.showSuccess()
     })
+    
+    // 1. Sending my FP info to the server...
+    let request = NSMutableURLRequest(URL: NSURL(string: "https://jo-pp-ruby-demo.herokuapp.com/rest/fp")!)
+    request.HTTPMethod = "POST"
+    let postString = "desc=\(futurePaymentAuthorization!.description)"
+    request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+    let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
+        guard error == nil && data != nil else {                                                          // check for fundamental networking error
+            print("error=\(error)")
+            return
+        }
+        
+        if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            print("statusCode should be 200, but is \(httpStatus.statusCode)")
+            print("response = \(response)")
+        }
+        
+        let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+        print("responseString (FP) = \(responseString)")
+    }
+    task.resume()
+    
+    // 2. Getting access token from the server...
+    var accessToken = ""
+    let request2 = NSMutableURLRequest(URL: NSURL(string: "https://jo-pp-ruby-demo.herokuapp.com/rest/token")!)
+    request2.HTTPMethod = "POST"
+    let postString2 = ""
+    request2.HTTPBody = postString2.dataUsingEncoding(NSUTF8StringEncoding)
+    let task2 = NSURLSession.sharedSession().dataTaskWithRequest(request2) { data, response, error in
+        guard error == nil && data != nil else {                                                          // check for fundamental networking error
+            print("error=\(error)")
+            return
+        }
+        
+        if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+            print("statusCode should be 200, but is \(httpStatus.statusCode)")
+            print("response = \(response)")
+        }
+        
+        let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+        print("responseString (TOKEN) = \(responseString)")
+        accessToken = "\(responseString!)"
+        print("accessToken = \(accessToken)")
+        
+        
+        // 3. Registering card info to PayPal by vault...
+        var vaultInfo = ""
+        let now = NSDate()
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        let nowString = formatter.stringFromDate(now)
+        let jsonString = "{" +
+            "\"payer_id\": \"user12345\"," +
+            "\"type\": \"visa\"," +
+            "\"number\": \"4417119669820331\"," +
+            "\"expire_month\": \"11\"," +
+            "\"expire_year\": \"2018\"," +
+            "\"first_name\": \"iOS Vault \(nowString) \"," +
+            "\"last_name\": \"Buyer\"," +
+            "\"billing_address\": {" +
+            "    \"line1\": \"222 First Street\"," +
+            "    \"city\": \"Saratoga\"," +
+            "    \"country_code\": \"US\"," +
+            "    \"state\": \"CA\"," +
+            "    \"postal_code\": \"95070\"" +
+            "}" +
+        "}"
+        print("json: \(jsonString)")
+        let request3 = NSMutableURLRequest(URL: NSURL(string: "https://api.sandbox.paypal.com/v1/vault/credit-cards")!)
+        request3.HTTPMethod = "POST"
+        request3.HTTPBody = jsonString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)
+        request3.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let header = "Bearer \(accessToken)"
+        print("Authorization: \(header)")
+        request3.setValue(header, forHTTPHeaderField: "Authorization")
+        let task3 = NSURLSession.sharedSession().dataTaskWithRequest(request3) { data, response, error in
+            guard error == nil && data != nil else {                                                          // check for fundamental networking error
+                print("error=\(error)")
+                return
+            }
+            
+            if let httpStatus = response as? NSHTTPURLResponse where httpStatus.statusCode != 200 {           // check for http errors
+                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+                print("response = \(response)")
+            }
+            
+            let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            print("responseString (VAULT) = \(responseString)")
+            vaultInfo = "\(responseString!)"
+            print("vaultInfo = \(vaultInfo)")
+        }
+        task3.resume()
+        
+        
+    }
+    task2.resume()
+    
+    
+    
+    
   }
   
   // MARK: Profile Sharing
